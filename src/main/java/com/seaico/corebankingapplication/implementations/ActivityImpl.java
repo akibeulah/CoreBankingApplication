@@ -1,6 +1,6 @@
 package com.seaico.corebankingapplication.implementations;
 
-import com.seaico.corebankingapplication.services.ActivityI;
+import com.seaico.corebankingapplication.repositories.ActivityRepository;
 
-public class ActivityImpl implements ActivityI {
-}
+//public class ActivityImpl implements ActivityRepository {
+//}

@@ -1,24 +1,24 @@
 package com.seaico.corebankingapplication.models;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Getter
-@Setter
 public class Activity {
     @Id
-    private Long id;
-    private Long userId;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String id;
+    private String userId;
     private String description;
     private LocalDateTime createdAt;
 }

@@ -11,5 +11,5 @@ spring:
     properties:
       hibernate:
         jdbc:
-          time_zone: UTC + 1
+          time_zone: UTC
 
