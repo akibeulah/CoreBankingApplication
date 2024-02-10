@@ -1,12 +1,17 @@
 package com.seaico.corebankingapplication.repositories;
 
 import com.seaico.corebankingapplication.models.Activity;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
+import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
+import java.util.UUID;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -15,29 +20,47 @@ public class ActivityRepositoryTest {
 
     @Autowired
     private ActivityRepository activityRepository;
+    private List<Activity> testActivitiesList;
 
     @BeforeEach
-    public void setUpMocks() {
-        Activity activity1 = new Activity();
-        activity1.setId("f47ac13b-58cc-4372-a567-0e12b2c3d129");
-        activity1.setUserId("f47ac10b-58cc-4372-a567-0e02b2c3d479");
-        activity1.setDescription("Description");
+    public void setupMocks() {
+        testActivitiesList = new ArrayList<>();
 
-        Activity activity2 = new Activity();
-        activity2.setId("f47ac13b-58cc-4372-a567-0e12b2c3d239");
-        activity2.setUserId("f47ac10b-58cc-4372-a567-0e02b2c3d479");
-        activity2.setDescription("Description");
+        for (int i = 0; i < 12; i++) {
+            testActivitiesList.add(
+                    new Activity(
+                            UUID.randomUUID().toString(),
+                            UUID.randomUUID().toString(),
+                            "Test Activity, delete if found!",
+                            LocalDateTime.now()
+                    )
+            );
+        }
 
-        Activity activity3 = new Activity();
-        activity3.setId("f47ac13b-58cc-4372-a567-0e12b2c3d479");
-        activity3.setUserId("f47ac10b-58cc-4372-a567-0e02b2c3d478");
-        activity3.setDescription("Description");
+        activityRepository.saveAll(testActivitiesList);
+    }
+
+    @AfterEach
+    public void destroyMocks() {
+        activityRepository.deleteAll();
     }
 
     @Test
-    public void testFindAllByUserId() {
+    public void testFindAllActivitiesForUser() {
+        List<Activity> activities = activityRepository.findAllByUserId(testActivitiesList.get(1).getUserId());
+
+        assertThat(activities).isEqualTo(
+                testActivitiesList.stream().filter(c ->
+                                Objects.equals(c.getUserId(), testActivitiesList.get(1).getUserId())
+                        )
+                        .toList()
+        );
+    }
+
+    @Test
+    public void testFindAllActivitiesForUserWithNoActivities() {
         List<Activity> activities = activityRepository.findAllByUserId("f47ac10b-58cc-4372-a567-0e02b2c3d479");
-        assertThat(activities).hasSize(2);
-        assertThat(activities.get(0).getUserId()).isEqualTo("f47ac10b-58cc-4372-a567-0e02b2c3d479");
+
+        assertThat(activities).isEmpty();
     }
 }
