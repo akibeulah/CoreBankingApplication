@@ -2,6 +2,7 @@ package com.seaico.corebankingapplication.controller;
 
 import com.seaico.corebankingapplication.models.Activity;
 import com.seaico.corebankingapplication.repositories.ActivityRepository;
+import com.seaico.corebankingapplication.services.ActivityService;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
@@ -24,12 +26,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 //@SpringBootTest
 @WebMvcTest(ActivityController.class)
-@ExtendWith(MockitoExtension.class)
 public class ActivityControllerTest {
     @Autowired
     private MockMvc mockMvc;
     @Mock
     private ActivityRepository activityRepository;
+    @MockBean
+    private ActivityService activityService;
 
     private List<Activity> testActivitiesList;
 
@@ -70,12 +73,9 @@ public class ActivityControllerTest {
 
     @Test
     public void testFetchActivity() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders
-                        .get("http://localhost:8000/api/v1/activities/activity/" + testActivitiesList.get(1).getId())
-                )
-                .andDo(System.out::println)
-                .andExpect(status().isOk())
-                .andExpect(System.out::println);
+        when(activityRepository.findById(testActivitiesList.get(1).getId())).thenReturn(Optional.ofNullable(testActivitiesList.get(1)));
+        mockMvc.perform(get("/api/v1/activities/activity/{id}", testActivitiesList.get(1).getId()))
+                .andExpect(status().isOk());
     }
 
     @Test

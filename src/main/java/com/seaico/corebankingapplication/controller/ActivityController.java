@@ -2,6 +2,7 @@ package com.seaico.corebankingapplication.controller;
 
 import com.seaico.corebankingapplication.models.Activity;
 import com.seaico.corebankingapplication.repositories.ActivityRepository;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,23 +21,23 @@ public class ActivityController {
     }
 
     @GetMapping("/")
-    public String Home() {
-        return "This is the activities controller home";
+    public ResponseEntity<String> Home() {
+        return ResponseEntity.ok("This is the activities controller home");
     }
 
     @GetMapping("/activity/{id}")
-    public Activity fetchActivity(@PathVariable String id) {
+    public ResponseEntity<Activity> fetchActivity(@PathVariable String id) {
         Optional<Activity> activity = activityRepository.findById(id);
-        return activity.orElse(null);
+        return ResponseEntity.ok(activity.orElse(null));
     }
 
     @GetMapping("/activity")
-    public List<Activity> fetchActivities() {
-        return activityRepository.findAll();
+    public ResponseEntity<List<Activity>> fetchActivities() {
+        return ResponseEntity.ok(activityRepository.findAll());
     }
 
     @GetMapping("/activity/user")
-    public List<Activity> fetchUserActivities(String userId) {
-        return activityRepository.findAllByUserId(userId);
+    public ResponseEntity<List<Activity>> fetchUserActivities(String userId) {
+        return ResponseEntity.ok(activityRepository.findAllByUserId(userId));
     }
 }
