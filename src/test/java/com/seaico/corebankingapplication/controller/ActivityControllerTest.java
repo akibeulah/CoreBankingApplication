@@ -1,6 +1,9 @@
 package com.seaico.corebankingapplication.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.seaico.corebankingapplication.controllers.v1.ActivityController;
 import com.seaico.corebankingapplication.models.Activity;
+import com.seaico.corebankingapplication.models.User;
 import com.seaico.corebankingapplication.repositories.ActivityRepository;
 import com.seaico.corebankingapplication.services.ActivityService;
 import org.junit.jupiter.api.AfterEach;
@@ -10,22 +13,22 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDateTime;
 import java.util.*;
 
-import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 //@SpringBootTest
 @WebMvcTest(ActivityController.class)
+@AutoConfigureMockMvc(addFilters = false)
+@ExtendWith(MockitoExtension.class)
 public class ActivityControllerTest {
     @Autowired
     private MockMvc mockMvc;
@@ -33,7 +36,9 @@ public class ActivityControllerTest {
     private ActivityRepository activityRepository;
     @MockBean
     private ActivityService activityService;
-
+    @Autowired
+    private ObjectMapper objectMapper;
+    private Activity activity;
     private List<Activity> testActivitiesList;
 
     @BeforeEach
@@ -45,11 +50,12 @@ public class ActivityControllerTest {
             testActivitiesList.add(
                     new Activity(
                             UUID.randomUUID().toString(),
-                            UUID.randomUUID().toString(),
                             "Test Activity, delete if found!",
-                            LocalDateTime.now()
+                            LocalDateTime.now(),
+                            new User()
                     )
             );
+
 
             when(activityRepository.findById(testActivitiesList.get(i).getId())).thenReturn(Optional.of(testActivitiesList.get(i)));
             int finalI = i;
@@ -73,7 +79,6 @@ public class ActivityControllerTest {
 
     @Test
     public void testFetchActivity() throws Exception {
-        when(activityRepository.findById(testActivitiesList.get(1).getId())).thenReturn(Optional.ofNullable(testActivitiesList.get(1)));
         mockMvc.perform(get("/api/v1/activities/activity/{id}", testActivitiesList.get(1).getId()))
                 .andExpect(status().isOk());
     }
@@ -81,14 +86,12 @@ public class ActivityControllerTest {
     @Test
     public void testFetchActivities() throws Exception {
         mockMvc.perform(get("/api/v1/activities/activity"))
-                .andDo(System.out::println)
                 .andExpect(status().isOk());
     }
 
     @Test
     public void testFetchUserActivities() throws Exception {
-        mockMvc.perform(get("/api/v1/activities/activity/user"))
-                .andDo(System.out::println)
+        mockMvc.perform(get("/api/v1/activities/activity/user/{userId}", "userId")) // Replace "userId" with a valid user ID
                 .andExpect(status().isOk());
     }
 }

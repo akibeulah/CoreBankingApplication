@@ -24,14 +24,22 @@ public class User implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
+    @Column(nullable = false)
     private String fullName;
+    @Column(unique = true, nullable = false)
     private String email;
+    @Column(unique = true, nullable = false)
     private String username;
+    @Column(nullable = false)
     private String password;
+    @Column(nullable = false)
     private LocalDateTime dateCreated;
     private LocalDateTime dateUpdated;
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private Role role;
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.DETACH)
+    private List<Activity> activities;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

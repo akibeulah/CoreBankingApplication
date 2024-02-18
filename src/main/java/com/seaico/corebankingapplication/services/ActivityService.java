@@ -15,18 +15,21 @@ public class ActivityService {
     @Autowired
     private ActivityRepository activityRepository;
 
-    public Activity createActivity(Activity activity) {
-        activityRepository.save(activity);
-        return activity;
+    public void createActivity(Activity activity) {
+        try {
+            activityRepository.save(activity);
+        } catch (Exception e) {
+            System.out.println(e);
+        }
     }
 
     public List<Activity> getAllActivities() {
         return activityRepository.findAll();
     }
 
-    public List<Activity> getAllActivitiesByUserId(String userId) {
-        return activityRepository.findAllByUserId(userId);
-    }
+//    public List<Activity> getAllActivitiesByUserId(String userId) {
+//        return activityRepository.findAllByUserId(userId);
+//    }
 
     public Optional<Activity> getActivity(String activityId) {
         return activityRepository.findById(activityId);
