@@ -1,5 +1,6 @@
 package com.seaico.corebankingapplication.models;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.seaico.corebankingapplication.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,7 +40,11 @@ public class User implements UserDetails {
     @Enumerated(EnumType.STRING)
     private Role role;
     @OneToMany(mappedBy = "userId", cascade = CascadeType.DETACH)
+    @JsonIgnore
     private List<Activity> activities;
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.DETACH)
+    @JsonIgnore
+    private List<Account> accounts;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

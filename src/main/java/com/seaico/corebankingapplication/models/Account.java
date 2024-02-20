@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Data
 @AllArgsConstructor
@@ -14,12 +16,14 @@ public class Account {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String userId;
     private String accountName;
     private String description;
     @Enumerated(EnumType.STRING)
     private AccountStatus status;
     private String currency;
-    private String dateCreated;
-    private String dateUpdated;
+    private LocalDateTime dateCreated;
+    private LocalDateTime dateUpdated;
+    @ManyToOne
+    @JoinColumn(name = "user_id", nullable = false)
+    private User userId;
 }

@@ -4,7 +4,9 @@ import com.seaico.corebankingapplication.config.JwtService;
 import com.seaico.corebankingapplication.daos.AuthenticationRequest;
 import com.seaico.corebankingapplication.daos.AuthenticationResponse;
 import com.seaico.corebankingapplication.daos.RegisterRequest;
+import com.seaico.corebankingapplication.enums.AccountStatus;
 import com.seaico.corebankingapplication.enums.Role;
+import com.seaico.corebankingapplication.models.Account;
 import com.seaico.corebankingapplication.models.Activity;
 import com.seaico.corebankingapplication.models.User;
 import com.seaico.corebankingapplication.repositories.UserRepository;
@@ -17,6 +19,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
@@ -28,8 +33,9 @@ public class AuthenticationService {
     private final JwtService jwtService;
     private final AuthenticationManager authenticationManager;
     private final ActivityService activityService;
+    private final AccountService accountService;
 
-    public AuthenticationResponse register(RegisterRequest registerRequest) {
+    public AuthenticationResponse register(RegisterRequest registerRequest) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         if (userRepository.findByEmail(registerRequest.getEmail()).isPresent() || userRepository.findByUsername(registerRequest.getUsername()).isPresent())
             throw new ResponseStatusException(HttpStatus.OK, "Username or Email already exists!");
 
@@ -51,6 +57,16 @@ public class AuthenticationService {
                 LocalDateTime.now(),
                 user
         ));
+        accountService.createAccount(new Account(
+                UUID.randomUUID().toString(),
+                user.getFullName(),
+                "INITIAL ACCOUNT",
+                AccountStatus.ACTIVE,
+                "NGN",
+                LocalDateTime.now(),
+                LocalDateTime.now(),
+                user
+        ));
 
         var jwtToken = jwtService.generateToken(user);
         return AuthenticationResponse.builder()
@@ -58,7 +74,7 @@ public class AuthenticationService {
                 .build();
     }
 
-    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) {
+    public AuthenticationResponse authenticate(AuthenticationRequest authenticationRequest) throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
         try {
             authenticationManager.authenticate(
                     new UsernamePasswordAuthenticationToken(
