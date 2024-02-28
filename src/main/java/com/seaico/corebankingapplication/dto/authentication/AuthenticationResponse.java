@@ -1,4 +1,4 @@
-package com.seaico.corebankingapplication.daos;
+package com.seaico.corebankingapplication.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.AllArgsConstructor;

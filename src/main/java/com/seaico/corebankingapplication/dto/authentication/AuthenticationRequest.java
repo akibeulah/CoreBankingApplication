@@ -1,4 +1,4 @@
-package com.seaico.corebankingapplication.daos;
+package com.seaico.corebankingapplication.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -1,6 +1,5 @@
-package com.seaico.corebankingapplication.daos;
+package com.seaico.corebankingapplication.dto;
 
-import jakarta.persistence.UniqueConstraint;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
