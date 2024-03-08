@@ -1,8 +1,8 @@
 spring:
   datasource:
-    url: jdbc:postgresql://snuffleupagus.db.elephantsql.com:5432/jjlwnqjd
-    username: jjlwnqjd
-    password: vSLE4W7Vtr6Dp0avX-cen5VFo6Mijz07
+    url: jdbc:postgresql://localhost:5433/SpringLearningDevelopment
+    username: postgres
+    password: secret
     driver-class-name: org.postgresql.Driver
   jpa:
     database-platform: org.hibernate.dialect.PostgreSQLDialect
@@ -11,5 +11,4 @@ spring:
     properties:
       hibernate:
         jdbc:
-          time_zone: UTC + 1
-
+          time_zone: UTC
