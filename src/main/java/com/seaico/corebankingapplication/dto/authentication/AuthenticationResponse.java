@@ -1,6 +1,7 @@
-package com.seaico.corebankingapplication.dto;
+package com.seaico.corebankingapplication.dto.authentication;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.seaico.corebankingapplication.dto.user.UserAuthenticationPayload;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -15,4 +16,6 @@ public class AuthenticationResponse {
     private String accessToken;
     @JsonProperty("refresh_token")
     private String refreshToken;
+    @JsonProperty("user_details")
+    private UserAuthenticationPayload user;
 }

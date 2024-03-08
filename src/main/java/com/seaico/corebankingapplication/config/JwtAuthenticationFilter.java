@@ -1,5 +1,6 @@
 package com.seaico.corebankingapplication.config;
 
+import com.seaico.corebankingapplication.services.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;

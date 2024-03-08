@@ -15,9 +15,17 @@ import java.util.List;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserBasicProfileDto {
-    private String id;
+public class UserAuthenticationPayload {
     private String fullName;
     private String username;
     private String email;
+    private LocalDateTime dateCreated;
+    private Role role;
+    private List<Activity> activities;
+    private List<Account> accounts;
+    private boolean isAccountNonExpired;
+    private boolean isAccountNonLocked;
+    private boolean isCredentialsNonExpired;
+    private boolean isEnabled;
+    private boolean hasPin;
 }

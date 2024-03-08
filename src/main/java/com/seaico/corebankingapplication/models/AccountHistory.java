@@ -1,12 +1,12 @@
 package com.seaico.corebankingapplication.models;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+
+import java.time.LocalDateTime;
 
 @Entity
 @Data
@@ -16,8 +16,22 @@ public class AccountHistory {
     @Id
     @GeneratedValue(strategy = GenerationType.UUID)
     private String id;
-    private String accountId;
+    @JsonIgnore
+    @ManyToOne
+    @JoinColumn(name = "account_id", nullable = false)
+    private Account accountId;
     private int balanceBeforeTransaction;
     private int balanceAfterTransaction;
-    private String dateCreated;
+    private LocalDateTime dateCreated;
+
+    @Override
+    public String toString() {
+        return "AccountHistory{" +
+                "id='" + id + '\'' +
+                ", accountId=" + accountId.getAccountNumber() +
+                ", balanceBeforeTransaction=" + balanceBeforeTransaction +
+                ", balanceAfterTransaction=" + balanceAfterTransaction +
+                ", dateCreated=" + dateCreated +
+                '}';
+    }
 }

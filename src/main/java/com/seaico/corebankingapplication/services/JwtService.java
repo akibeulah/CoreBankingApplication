@@ -1,10 +1,12 @@
-package com.seaico.corebankingapplication.config;
+package com.seaico.corebankingapplication.services;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
@@ -80,7 +82,7 @@ public class JwtService {
     }
 
     private PrivateKey getPrivateKey() throws IOException, NoSuchAlgorithmException, InvalidKeySpecException {
-        byte[] keyBytes =  Base64.getDecoder().decode(Files.readAllBytes(Paths.get("D:\\Projects\\__suites\\seaico-core-banking\\CoreBankingApplication\\src\\main\\java\\com\\seaico\\corebankingapplication\\secrets\\private.key")));
+        byte[] keyBytes = Base64.getDecoder().decode(Files.readAllBytes(Paths.get("D:\\Projects\\__suites\\seaico-core-banking\\CoreBankingApplication\\src\\main\\java\\com\\seaico\\corebankingapplication\\secrets\\private.key")));
         PKCS8EncodedKeySpec spec = new PKCS8EncodedKeySpec(keyBytes);
         KeyFactory kf = KeyFactory.getInstance("RSA");
         return kf.generatePrivate(spec);
@@ -88,5 +90,13 @@ public class JwtService {
 
     private PublicKey getPublicKey() {
         return generateKeyPair().getPublic();
+    }
+
+    public static String getUsername() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        if (authentication != null && authentication.isAuthenticated())
+            return authentication.getName();
+        else
+            return null;
     }
 }

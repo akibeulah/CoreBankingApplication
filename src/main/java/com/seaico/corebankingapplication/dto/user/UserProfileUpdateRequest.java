@@ -1,4 +1,4 @@
-package com.seaico.corebankingapplication.dto;
+package com.seaico.corebankingapplication.dto.user;
 
 
 import lombok.AllArgsConstructor;

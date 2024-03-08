@@ -13,6 +13,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 
 import java.time.LocalDateTime;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 
 @Entity
@@ -45,6 +46,10 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "userId", cascade = CascadeType.DETACH)
     @JsonIgnore
     private List<Account> accounts;
+    @OneToMany(mappedBy = "userId", cascade = CascadeType.DETACH)
+    @JsonIgnore
+    private List<Pin> pins;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -69,5 +74,19 @@ public class User implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public List<Activity> getActivities() {
+        return activities.subList(0, Math.min(activities.size(), 5));
+    }
+
+    public List<Pin> getPins() {
+        List<Pin> reversedPins = this.pins;
+        Collections.reverse(reversedPins);
+        return reversedPins;
+    }
+
+    public String getPin() {
+        return getPins().get(0).getHashedPinCode();
     }
 }
